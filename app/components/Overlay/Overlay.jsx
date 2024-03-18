@@ -7,7 +7,7 @@ export const Overlay = (props) => {
         `${Styles["overlay"]} 
         ${props.isOpened && Styles["overlay_is-opened"]}`
       } 
-      onClick={props.closePopup}
+      onClick={props.close}
     ></div>
   );
 };

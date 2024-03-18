@@ -1,27 +1,21 @@
 'use client'
 
-import { 
-  useEffect, 
-  useState 
-} from 'react';
+import { useState } from 'react';
 import Styles from './Header.module.css'
 import Link from 'next/link';
 import { Overlay } from '../Overlay/Overlay';
 import { Popup } from '../Popup/Popup';
 import { AuthForm } from '../AuthForm/AuthForm';
 import { usePathname } from "next/navigation";
-import { 
-  getMe, 
-  getJWT, 
-  removeJWT, 
-  isResponseOk 
-} from '@/app/api/api-utils';
-import { endpoints } from '@/app/api/config';
+import { useStore } from '@/app/store/app-store';
 
 export const Header = () => {
 
-  const [isAuthorized, setIsAuthorized] = useState(false);
   const [popupIsOpened, setPopupIsOpened] = useState(false);
+
+  const authContext = useStore();
+
+  const pathname = usePathname();
 
   const openPopup = () => {
     setPopupIsOpened(true)
@@ -31,26 +25,9 @@ export const Header = () => {
     setPopupIsOpened(false)
   }
 
-  const pathname = usePathname();
-
-  useEffect(()=>{
-    const jwt = getJWT();
-    if (jwt) {
-      getMe(endpoints.me, jwt).then((userData) => {
-        if (isResponseOk(userData)) {
-          setIsAuthorized(true)
-        } else {
-          setIsAuthorized(false)
-          removeJWT()
-        }
-      })
-    }
-  }, [])
-
-  const handleLogOut = () => {
-    setIsAuthorized(false);
-    removeJWT();
-  }
+  const handleLogout = () => {
+    authContext.logout();
+  };
 
   return (
     <header className={Styles['header']}>
@@ -64,39 +41,39 @@ export const Header = () => {
       <nav className={Styles['menu']}>
         <ul className={Styles['menu__list']}>
           <li className={Styles['menu__item']}>
-            <Link href="/new" className={`${Styles['menu__link']} ${pathname === '/new' ? Styles["menu__link_active"] : "" }`}>
+            <Link href="/categoryPage/new" className={`${Styles['menu__link']} ${pathname === '/categoryPage/new' ? Styles["menu__link_active"] : "" }`}>
               Новинки
             </Link>
           </li>
           <li className={Styles['menu__item']}>
-            <Link href="/popular" className={`${Styles['menu__link']} ${pathname === '/popular' ? Styles["menu__link_active"] : "" }`}>
+            <Link href="/categoryPage/popular" className={`${Styles['menu__link']} ${pathname === '/categoryPage/popular' ? Styles["menu__link_active"] : "" }`}>
               Популярные
             </Link>
           </li>
           <li className={Styles['menu__item']}>
-            <Link href="/shooters" className={`${Styles['menu__link']} ${pathname === '/shooters' ? Styles["menu__link_active"] : "" }`}>
+            <Link href="/categoryPage/shooter" className={`${Styles['menu__link']} ${pathname === '/categoryPage/shooter' ? Styles["menu__link_active"] : "" }`}>
               Шутеры
             </Link>
           </li>
           <li className={Styles['menu__item']}>
-            <Link href="/runners" className={`${Styles['menu__link']} ${pathname === '/runners' ? Styles["menu__link_active"] : "" }`}>
+            <Link href="/categoryPage/runner" className={`${Styles['menu__link']} ${pathname === '/categoryPage/runner' ? Styles["menu__link_active"] : "" }`}>
               Ранеры
             </Link>
           </li>
           <li className={Styles['menu__item']}>
-            <Link href="/pixel-games" className={`${Styles['menu__link']} ${pathname === '/pixel-games' ? Styles["menu__link_active"] : "" }`}>
+            <Link href="/categoryPage/pixel" className={`${Styles['menu__link']} ${pathname === '/categoryPage/pixel' ? Styles["menu__link_active"] : "" }`}>
               Пиксельные
             </Link>
           </li>
           <li className={Styles['menu__item']}>
-            <Link href="/tds" className={`${Styles['menu__link']} ${pathname === '/tds' ? Styles["menu__link_active"] : "" }`}>
+            <Link href="/categoryPage/TDS" className={`${Styles['menu__link']} ${pathname === '/categoryPage/TDS' ? Styles["menu__link_active"] : "" }`}>
               TDS
             </Link>
           </li>
         </ul>
         <div className={Styles['auth']}>
-          {isAuthorized ? (
-            <button className={Styles['auth__button']} onClick={handleLogOut}>
+          {authContext.isAuth ? (
+            <button className={Styles['auth__button']} onClick={handleLogout}>
             Выйти
             </button>
           ) : (
@@ -106,9 +83,9 @@ export const Header = () => {
           )}
         </div>
       </nav>
-      <Overlay isOpened={popupIsOpened} closePopup={closePopup}/>
-      <Popup isOpened={popupIsOpened} closePopup={closePopup}>
-        <AuthForm close={closePopup} setAuth={setIsAuthorized}/>
+      <Overlay isOpened={popupIsOpened} close={closePopup}/>
+      <Popup isOpened={popupIsOpened} close={closePopup}>
+        <AuthForm close={closePopup} />
       </Popup>
     </header>
   )

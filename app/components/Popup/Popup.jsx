@@ -9,7 +9,7 @@ export const Popup = (props) => {
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 16 25"
-          onClick={props.closePopup}
+          onClick={props.close}
         >
           <path
             fill="#7E8292"
