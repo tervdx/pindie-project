@@ -2,10 +2,10 @@
 
 import { Banner } from './components/Banner/Banner';
 import { Promo } from './components/Promo/Promo';
-import { CardsList } from './components/CardsList/CardsList';
 import { endpoints } from './api/config';
 import { Preloader } from "./components/Preloader/Preloader"; 
 import { useGetDataByCategory } from './api/api-hooks';
+import { CardsListSection } from './components/CardsListSection/CardListSection';
 
 export default function Home() {
 
@@ -16,12 +16,12 @@ export default function Home() {
   <main className="main">
     <Banner/>
     {newGames ? (
-      <CardsList id='popular' title='Популярное' data={newGames}/>
+      <CardsListSection id='popular' title='Популярное' data={newGames} type='slider'/>
     ) : (
       <Preloader/>
     )}
     {popularGames ? (
-      <CardsList id='new' title='Новинки' data={popularGames}/>
+      <CardsListSection id='new' title='Новинки' data={popularGames} type='slider'/>
     ) : (
       <Preloader/>
     )}
