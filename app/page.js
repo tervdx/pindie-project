@@ -15,16 +15,14 @@ export default function Home() {
   return (
   <main className="main">
     <Banner/>
-    {newGames ? (
-      <CardsListSection id='popular' title='Популярное' data={newGames} type='slider'/>
-    ) : (
-      <Preloader/>
-    )}
-    {popularGames ? (
-      <CardsListSection id='new' title='Новинки' data={popularGames} type='slider'/>
-    ) : (
-      <Preloader/>
-    )}
+    {
+      (popularGames && newGames) ? (
+        <>
+          <CardsListSection id="popular" title="Популярные" data={popularGames} type="slider"/>
+          <CardsListSection id="new" title="Новинки"  data={newGames} type="slider"/>
+        </>
+      ) : <Preloader />
+    }
     <Promo/>
   </main>
   );
