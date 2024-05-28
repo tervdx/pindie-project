@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://zov.nomoredomainswork.ru/api';
+export const BASE_URL = 'test';
 
 export const endpoints = {
   games: `${BASE_URL}/games`,
